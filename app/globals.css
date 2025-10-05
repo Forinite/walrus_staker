@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 
 :root {
   --background: #ffffff;
@@ -82,4 +84,9 @@ body {
 .stroke-on-colored { background-color: #0C0F1D; }
 .stroke-on-light { background-color: #DDDEE4; }
 .stroke-on-dark { background-color: #3B3D48; }
+
+.font-press-start {
+  font-family: 'Press Start 2P', cursive;
+}
+
 
