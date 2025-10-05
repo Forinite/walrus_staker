@@ -1,5 +1,6 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import "tailwindcss";
+
 
 
 :root {
@@ -85,8 +86,30 @@ body {
 .stroke-on-light { background-color: #DDDEE4; }
 .stroke-on-dark { background-color: #3B3D48; }
 
-.font-press-start {
-  font-family: 'Press Start 2P', cursive;
+
+@font-face {
+  font-family: 'Press Start 2P'; /* A name you choose for the font */
+  src: url('/public/fonts/PressStart2P-Regular.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'Inter'; /* A name you choose for the font */
+  src: url('/public/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+}
+
+
+.font-press-start {
+  font-family: 'Press Start 2P', system-ui;
+  font-weight: 400;
+  font-style: Normal;
+  font-size: 15.77px;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+.font-inter {
+  font-family: 'Inter', system-ui;
+}
+
 
 
