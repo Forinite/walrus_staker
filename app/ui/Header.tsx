@@ -7,14 +7,14 @@ const Header = () => {
         <div className={' absolute w-screen h-[54px]  px-4 border-b-[1px] border-0 border-white  text-white   '}>
             <div className={'w-full h-full flex items-center justify-between '}>
                 <div className=" absolute  w-fit flex flex-col items-center justify-center scale-90 ">
-                    <Image className="absolute " src={walIcon} alt={'walrusIcon'} height={40} width={46} />
-                    <p className="relative z-10 text-base font-press-start text-white-100 pt-4">
+                    <Image className="absolute md:h-[40px] md:w-[46px] h-[26px] w-[30px]" src={walIcon} alt={'walrusIcon'} height={40} width={46} />
+                    <p className="relative z-10 md:text-base text-[10px] font-press-start text-white-100 pt-4">
                         Walru<span className="text-grape-300">s S</span>taker
                     </p>
                 </div>
                 <div />
-                <div>
-                    <p className={'font-inter font-light scale-90 '}>Stake Walrus</p>
+                <div className={'md:block hidden'}>
+                    <p className={'font-inter font-light scale-90 md:text-base text-sm'}>Stake Walrus</p>
                 </div>
                 <div />
                 <div className={'absolute right-4'}>

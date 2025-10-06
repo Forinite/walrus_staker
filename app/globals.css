@@ -101,8 +101,6 @@ body {
 .font-press-start {
   font-family: 'Press Start 2P', system-ui;
   font-weight: 400;
-  font-style: Normal;
-  font-size: 15.77px;
   line-height: 100%;
   letter-spacing: 0;
 }
@@ -110,6 +108,38 @@ body {
 .font-inter {
   font-family: 'Inter', system-ui;
 }
+/* Mint circle goes from top-right → bottom-left → back */
+@keyframes move-mint {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-880px, 480px); /* adjust based on container size */
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
 
+/* Grape circle goes from bottom-left → top-right → back */
+@keyframes move-grape {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(880px, -480px); /* adjust based on container size */
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
 
+.animate-move-mint {
+  animation: move-mint 3s ease-in-out infinite;
+  position: absolute;
+}
 
+.animate-move-grape {
+  animation: move-grape 3s ease-in-out infinite;
+  position: absolute;
+}
