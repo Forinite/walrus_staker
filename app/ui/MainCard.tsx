@@ -4,6 +4,7 @@ import React from 'react'
 import Image from "next/image";
 import {walrusIcon} from "@/app/icons";
 import Minting from "@/app/ui/popUps/Minting";
+import Minted from "@/app/ui/popUps/Minted";
 
 const MainCard = () => {
 
@@ -86,8 +87,12 @@ const MainCard = () => {
                 </div>
             </div>
 
+            {/*<div className={'absolute z-30  w-full flex items-center justify-center'}>*/}
+            {/*    <Minting />*/}
+            {/*</div>*/}
+
             <div className={'absolute z-30  w-full flex items-center justify-center'}>
-                <Minting />
+                <Minted />
             </div>
 
         </div>
