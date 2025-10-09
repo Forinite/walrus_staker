@@ -1,7 +1,6 @@
 import React from 'react'
-import {walDesktopIcon, walGlobalIcon, walGrid, walIcon, walStakedIcon} from "@/app/icons";
+import {walGrid, walStakedIcon} from "@/app/icons";
 import Image from "next/image";
-import ImageGird from "@/app/ui/Subcomponents/ImageGird";
 
 const Minted = () => {
     return (

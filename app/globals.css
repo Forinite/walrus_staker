@@ -56,6 +56,7 @@ body {
 
 .bg-walrus-grape { background-color: #C89BFF; } /* Walrus Grape */
 
+
 .text-grape-900 { color: #51008D; }
 .text-grape-700 { color: #7E00C6; }
 .text-grape-500 { color: #A14AE5; }
@@ -141,5 +142,22 @@ body {
 
 .animate-move-grape {
   animation: move-grape 3s ease-in-out infinite;
+  position: absolute;
+}
+
+@keyframes move-dots {
+  0% {
+    transform: translate(-40%, 0);
+  }
+  50% {
+    transform: translate(280%, 0px); /* adjust based on container size */
+  }
+  100% {
+    transform: translate(-40%, 0);
+  }
+}
+
+.animate-move-dots {
+  animation: move-dots 1s infinite;
   position: absolute;
 }
