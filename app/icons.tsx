@@ -5,6 +5,7 @@ import walFolderIconn from '../public/icons/walFolderIcon.png'
 import walGlobalIconn from '../public/icons/walGlobalIcon.png'
 import walStackIconn from '../public/icons/walStackIcon.png'
 import walStakedIconn from '../public/icons/walStakedIcon.png'
+import walGridd from '../public/icons/WalGrid.png'
 
 
 
@@ -15,3 +16,4 @@ export const walFolderIcon = walFolderIconn
 export const walGlobalIcon = walGlobalIconn
 export const walStackIcon = walStackIconn
 export const walStakedIcon = walStakedIconn
+export const walGrid = walGridd
