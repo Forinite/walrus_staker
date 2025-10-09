@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Image from "next/image";
 import { walrusIcon } from "@/app/icons";
 import Minting from "@/app/ui/popUps/Minting";
@@ -11,25 +11,43 @@ const MainCard = () => {
     const [isMinting, setIsMinting] = React.useState(false);
     const [isMinted, setIsMinted] = React.useState(false);
     const [MintCheck, setMintCheck] = React.useState(false);
+    const popupRef = useRef<HTMLDivElement>(null);
 
-    const handleChecking = (bool: boolean) => {
-        setChecking(bool);
-    };
+    const handleChecking = (bool: boolean) => setChecking(bool);
 
     const handleClaim = () => {
         setIsMinting(true);
         setIsMinted(false);
         setMintCheck(true);
 
-        // Wait 2 seconds, then switch to Minted
+        // Wait 1.5s, then switch to Minted
         setTimeout(() => {
             setIsMinting(false);
             setIsMinted(true);
         }, 1500);
     };
 
+    const handleCloseMint = () => {
+        setMintCheck(false);
+        setIsMinting(false);
+        setIsMinted(false);
+    };
+
+    // Close when clicking outside popup
+    useEffect(() => {
+        if (!MintCheck) return;
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+                handleCloseMint();
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [MintCheck]);
+
     return (
         <div className="h-full flex items-center justify-center pt-[60]">
+            {/* main card */}
             <div className="relative lg:scale-80 md:scale-70 h-fit flex items-center justify-center pt-[60]">
                 <div className="absolute md:-top-[146px] -top-[20px] z-10">
                     <Image
@@ -107,25 +125,29 @@ const MainCard = () => {
             </div>
 
             {/* Popup Layer */}
-            <div className="absolute z-30 w-full flex items-center justify-center">
-                {/* Minting with fade transition */}
-                {MintCheck && <div
-                    className={`transition-opacity duration-500 ${
-                        isMinting ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                    }`}
-                >
-                    <Minting/>
-                </div>}
+            {MintCheck && (
+                <div className="absolute z-30 w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                    <div ref={popupRef} className="relative">
+                        {/* Minting with fade transition */}
+                        <div
+                            className={`transition-opacity duration-500 ${
+                                isMinting ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                            }`}
+                        >
+                            <Minting />
+                        </div>
 
-                {/* Minted with fade transition */}
-                {MintCheck && <div
-                    className={`absolute transition-opacity duration-500 ${
-                        isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                    }`}
-                >
-                    <Minted/>
-                </div>}
-            </div>
+                        {/* Minted with fade transition */}
+                        <div
+                            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
+                                isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                            }`}
+                        >
+                            <Minted onClose={handleCloseMint} />
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
