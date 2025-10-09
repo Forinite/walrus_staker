@@ -8,9 +8,11 @@ interface LineProps {
     percentage: number; // 0 = top, 100 = bottom
     className?: string; // extra styles for container
     style?: React.CSSProperties;
+    top?: string | number;
+    left?: string | number;
 }
 
-const Line: React.FC<LineProps> = ({ percentage, className, style }) => {
+const Line: React.FC<LineProps> = ({ percentage, className, style, top, left }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const dotRef = useRef<HTMLDivElement>(null);
 
@@ -47,11 +49,15 @@ const Line: React.FC<LineProps> = ({ percentage, className, style }) => {
         <div
             ref={containerRef}
             className={clsx(
-                "w-[4px] h-[300px] bg-[#3B3D48] flex items-center justify-center relative overflow-hidden",
+                "w-[2px] h-[600px] bg-[#3B3D48] flex items-center justify-center relative overflow-hidden",
                 className
-
             )}
-            style={style}
+            style={{
+                position: (top !== undefined || left !== undefined) ? "absolute" : "relative",
+                top,
+                left,
+                ...style,
+            }}
         >
             <motion.div
                 ref={dotRef}

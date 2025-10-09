@@ -8,7 +8,7 @@ const HeroPage = () => {
         <div  className={' h-screen stroke-on-colored text-white'}>
             <Header />
             <MainCard />
-            {/*<Lines />*/}
+            <Lines />
         </div>
     )
 }
