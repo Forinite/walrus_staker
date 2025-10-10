@@ -46,9 +46,9 @@ const MainCard = () => {
     }, [MintCheck]);
 
     return (
-        <div className="relative z-10 h-full flex items-center justify-center md:mt-[0px] pt">
+        <div className="relative z-10 h-full flex items-center justify-center ">
             {/* main card */}
-            <div className="relative lg:scale-80 md:scale-70 scale-90 h-fit flex items-center justify-center pt-[60]">
+            <div className="relative lg:scale-80 md:scale-70 scale-90 h-fit flex items-center justify-center pt-[60px] md:mt-16 mt-8">
                 <div className="absolute md:-top-[146px] -top-[20px] z-10">
                     <Image
                         className="md:scale-100 scale-80"
