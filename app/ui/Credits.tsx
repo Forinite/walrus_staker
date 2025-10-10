@@ -10,7 +10,6 @@ const Credits = () => {
                 &nbsp;<a href={devLinks[1].devLink} target="_blank" className="underline underline-offset-4">{devLinks[1].devName}</a>,
                 and&nbsp;
                 &nbsp;<a href={devLinks[2].devLink} target="_blank" className="underline underline-offset-4">{devLinks[2].devName}</a>.
-
             </p>
         </div>
     )

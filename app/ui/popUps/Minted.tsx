@@ -1,12 +1,29 @@
 import React from 'react';
 import Image from "next/image";
 import { walGrid, walStakedIcon } from "@/app/icons";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+
 
 interface MintedProps {
     onClose: () => void;
 }
 
 const Minted: React.FC<MintedProps> = ({ onClose }) => {
+        const x = useMotionValue(0);
+        const y = useMotionValue(0);
+        const rotateX = useTransform(y, [-50, 50], [10, -10]);
+        const rotateY = useTransform(x, [-50, 50], [-10, 10]);
+
+        const handleMouseMove = (e: React.MouseEvent) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            x.set(e.clientX - rect.left - rect.width / 2);
+            y.set(e.clientY - rect.top - rect.height / 2);
+        };
+
+        const reset = () => {
+            x.set(0);
+            y.set(0);
+        };
     return (
         <div className="border-1 border-[#98F0E4]/40 rounded-[10px] md:rounded-[18px] md:w-[540px] w-[260px] aspect-[651/683] stroke-on-colored bg-[#3B3D48]/60 backdrop-blur-md">
             <div className="md:pt-8 pt-4">
@@ -43,12 +60,22 @@ const Minted: React.FC<MintedProps> = ({ onClose }) => {
             </div>
 
             <div className="my-4">
-                <p
+                <motion.div
+                    style={{
+                        x,
+                        y,
+                        rotateX,
+                        rotateY,
+                        perspective: 600,
+                    }}
+                    onMouseMove={handleMouseMove}
+                    onMouseLeave={reset}
                     onClick={onClose}
-                    className="bg-walrus-grape hover:opacity-90 md:px-6 px-4 py-2 mx-auto rounded-lg w-fit cursor-pointer font-inter font-light md:text-base text-[11px]"
+                    className="bg-walrus-grape md:px-6 px-4 py-2 mx-auto rounded-lg w-fit cursor-pointer font-inter font-light md:text-base text-[11px] shadow-[0_0_15px_rgba(196,130,243,0.3)] transition-transform duration-150"
+                    whileTap={{ scale: 0.95 }}
                 >
                     Check Wallet
-                </p>
+                </motion.div>
             </div>
         </div>
     );
