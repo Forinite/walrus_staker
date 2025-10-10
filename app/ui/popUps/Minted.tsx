@@ -71,7 +71,7 @@ const Minted: React.FC<MintedProps> = ({ onClose }) => {
                     onMouseMove={handleMouseMove}
                     onMouseLeave={reset}
                     onClick={onClose}
-                    className="bg-walrus-grape md:px-6 px-4 py-2 mx-auto rounded-lg w-fit cursor-pointer font-inter font-light md:text-base text-[11px] shadow-[0_0_15px_rgba(196,130,243,0.3)] transition-transform duration-150"
+                    className="bg-walrus-grape md:px-6 px-4 py-2 mx-auto rounded-lg w-fit cursor-pointer font-inter font-light md:text-base text-[11px] hover:shadow-[0_0_15px_rgba(196,130,243,0.3)] transition-transform duration-150"
                     whileTap={{ scale: 0.95 }}
                 >
                     Check Wallet
