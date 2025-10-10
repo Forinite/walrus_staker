@@ -5,7 +5,7 @@ import Lines from "@/app/ui/Lines";
 
 const HeroPage = () => {
     return (
-        <div  className={' h-screen stroke-on-colored text-white'}>
+        <div  className={' h-screen overflow-hidden stroke-on-colored text-white'}>
             <Header />
             <MainCard />
             <Lines />

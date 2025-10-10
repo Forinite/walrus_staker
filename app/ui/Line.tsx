@@ -64,10 +64,10 @@ const Line: React.FC<LineProps> = ({ percentage, className, style, top, left }) 
                 className="w-4 h-20 rounded-full bg-walrus-mint blur-[1px] absolute"
                 initial={{ y: startOffset }}
                 animate={{
-                    y: [-40, range + 40, -40],
+                    y: [-(startOffset*8), range + startOffset, -startOffset * 8],
                 }}
                 transition={{
-                    duration: 2,
+                    duration: 4,
                     ease: "easeInOut",
                     repeat: Infinity,
                 }}

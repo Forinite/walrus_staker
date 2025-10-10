@@ -126,7 +126,7 @@ const MainCard = () => {
 
             {/* Popup Layer */}
             {MintCheck && (
-                <div className="absolute z-30 w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                <div className="absolute top-0 z-30 w-full h-full flex items-center justify-center bg-black/20 backdrop-blur-sm">
                     <div ref={popupRef} className="relative">
                         {/* Minting with fade transition */}
                         <div
