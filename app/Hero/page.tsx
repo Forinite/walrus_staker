@@ -2,6 +2,7 @@ import React from 'react'
 import Header from "@/app/ui/Header";
 import MainCard from "@/app/ui/MainCard";
 import Lines from "@/app/ui/Lines";
+import Credits from "@/app/ui/Credits";
 
 const HeroPage = () => {
     return (
@@ -9,6 +10,7 @@ const HeroPage = () => {
             <Header />
             <MainCard />
             <Lines />
+            <Credits />
         </div>
     )
 }
