@@ -8,24 +8,28 @@ import Minted from '@/app/ui/popUps/Minted';
 import useMinter from '../hooks/useMinter';
 
 const MainCard = () => {
-  const [checking, setChecking] = React.useState(false); // whether we've successfully checked (shows claim)
+  // whether we've successfully checked (shows claim) is now provided by the hook
   const [isMinted, setIsMinted] = React.useState(false); // local flag for showing minted UI
   const [MintCheck, setMintCheck] = React.useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
 
-  // Hook: returns { state, mint, isMinting }
-  const { state: mintState, mint, isMinting } = useMinter();
+  const {
+    state: mintState,
+    mint,
+    isMinting,
+    checkWallet,
+    checkingLoading,
+    stakeDays,
+    checking,
+    checkError,
+  } = useMinter();
 
-  // Controlled input and fetched state
+  // Controlled input
   const [wallet, setWallet] = React.useState('');
-  const [stakeDays, setStakeDays] = React.useState<number | null>(null);
-  const [checkingLoading, setCheckingLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
   // For clearing the mint timeout (if you still need a timeout for animation; optional)
   const timeoutRef = useRef<number | null>(null);
-
-  const handleChecking = (bool: boolean) => setChecking(bool);
 
   // Called when user clicks "Claim Loyalty NFT"
   const handleClaim = async () => {
@@ -43,11 +47,7 @@ const MainCard = () => {
     // call hook's mint - await it so we can rely on hook state after it resolves
     try {
       await mint({ walletAddress: wallet });
-
-      // Optionally wait a short time for UX animation, or rely on hook state via effect below
-      // timeoutRef.current = window.setTimeout(() => { /* nothing needed here */ }, 500);
     } catch (err) {
-      // useMinter currently doesn't rethrow, it sets state with error; but keep this catch for safety
       setError((err as Error).message ?? 'Mint failed');
     }
   };
@@ -112,64 +112,9 @@ const MainCard = () => {
   // Perform the GET /api/stake?walletAddress=... call
   const onCheckWallet = async () => {
     setError(null);
-    setStakeDays(null);
-
-    // validation: only require it starts with "0x"
-    if (!wallet || !wallet.trim().toLowerCase().startsWith('0x')) {
-      setError('Please enter an address starting with "0x".');
-      setChecking(false);
-      return;
-    }
-
-    setCheckingLoading(true);
-    try {
-      const res = await fetch(
-        `/api/stake?walletAddress=${encodeURIComponent(wallet)}`,
-        {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-        }
-      );
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        // handle API error message
-        setError(data?.error ?? data?.message ?? 'Failed to fetch stake info.');
-        setChecking(false);
-      } else {
-        // Try to read stakeDays or parse message fallback
-        let days: number | null = null;
-        if (typeof data?.stakeDays === 'number') {
-          days = data.stakeDays;
-        } else if (typeof data?.days === 'number') {
-          days = data.days;
-        } else if (typeof data?.message === 'string') {
-          // attempt to extract number from message "You have staked for X Days"
-          const m = data.message.match(/(\d+)\s*days?/i);
-          if (m) days = parseInt(m[1], 10);
-        }
-
-        if (days == null) {
-          // If API didn't return a days number, show message (if present)
-          if (data?.message) {
-            setError(data.message);
-            setChecking(false);
-          } else {
-            setError('Unexpected response format from server.');
-            setChecking(false);
-          }
-        } else {
-          setStakeDays(days);
-          setChecking(true);
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching stake:', err);
-      setError('Network error while contacting server.');
-      setChecking(false);
-    } finally {
-      setCheckingLoading(false);
+    const res = await checkWallet(wallet);
+    if (!res.ok) {
+      setError(res.message ?? 'Failed to check wallet');
     }
   };
 
@@ -262,12 +207,12 @@ const MainCard = () => {
                   )}
 
                   {/* show errors */}
-                  {error && (
+                  {(error || checkError) && (
                     <p
                       className="mt-3 text-center text-[12px] text-red-400"
                       role="alert"
                     >
-                      {error}
+                      {error ?? checkError}
                     </p>
                   )}
                 </div>

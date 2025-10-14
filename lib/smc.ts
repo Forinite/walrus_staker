@@ -3,6 +3,7 @@ import { Transaction } from '@mysten/sui/transactions';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import dotenv from "dotenv";
 import { SignatureWithBytes } from '@mysten/sui/cryptography';
+import { fromBase64, toBase64 } from '@mysten/sui/utils';
 dotenv.config();
 
 // Configuration
@@ -43,13 +44,13 @@ export async function mint_nft(to_address: string) {
     });
 
     tx.setSender(SENDER);
-    // const txBytes = await tx.build({ client: suiClient });
+    const txBytes = await tx.build({ onlyTransactionKind: true });
 
     // const result = await keypair.signTransaction(txBytes);
 
     // const result = await keypair.signAndExecuteTransaction({ transaction: tx, client: suiClient})
 
-    return tx;
+    return toBase64(txBytes);
 }
 
 export const signTransaction = async (tx: Transaction): Promise<SignatureWithBytes> => {
