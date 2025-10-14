@@ -1,8 +1,8 @@
 "use client";
 import { MintResponse } from '@/lib/types';
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from '@mysten/dapp-kit';
+import { useCurrentAccount, useSignAndExecuteTransaction, useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
 import { Transaction } from '@mysten/sui/transactions';
-import { fromBase64 } from '@mysten/sui/utils';
+import { fromBase64, toBase64 } from '@mysten/sui/utils';
 import { useState, useCallback } from 'react';
 
 function useMinter() {
@@ -11,6 +11,7 @@ function useMinter() {
     const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
     const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
+    const { mutate: signTransaction } = useSignTransaction();
 
     // check (GET) state
     const [checkingLoading, setCheckingLoading] = useState(false);
@@ -42,36 +43,55 @@ function useMinter() {
                 throw new Error('Failed to stake');
             }
 
-            const data = await response.json();
+            const data: MintResponse = await response.json();
 
             if (!data.signedTx) {
                 throw new Error("Transaction wasn't created")
             }
 
             // const txb = new Transaction();
-            const txBytes = fromBase64(data.signedTx);
+            const txBytes = fromBase64(data.signedTx.bytes);
             // const txBytes = await txb.build({ onlyTransactionKind: true})
             const tx = Transaction.fromKind(txBytes);
 
+            tx.setSender("0x94b203ed341992a60d3089ba98280c5aa2154e84b40d1aae7ac670c8619c13d7");
             // tx.setSender(currentAccount.address);
             tx.setGasOwner(currentAccount.address);
 
-            const result = await new Promise((resolve, reject) => {
-                signAndExecuteTransaction({
-                    transaction: tx,
-                }, {
-                    onSuccess: resolve,
-                    onError: reject
-                })
 
-            })
-            // const result = await suiClient.executeTransactionBlock({
-            //     transactionBlock: data.signedTx?.bytes,
-            //     signature: data.signedTx?.signature
+            // const result = await new Promise((resolve, reject) => {
+            //     signAndExecuteTransaction({
+            //         transaction: tx,
+            //     }, {
+            //         onSuccess: resolve,
+            //         onError: reject
+            //     })
+
             // })
 
-             
-            console.log(result);
+            const userResponse = await new Promise(async (resolve, reject) => {
+                signTransaction({ transaction: toBase64(await tx.build({ client: suiClient })) }, { onSuccess: resolve, onError: reject })
+
+            });
+
+            const response2 = await fetch('/api/execute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userResponse),
+            });
+
+            if (!response2.ok) {
+                throw new Error('Failed to stake');
+            }
+            // const result = await suiClient.executeTransactionBlock({
+            //     transactionBlock: await tx.build({ client: suiClient}),
+            //     signature: [data.signedTx.signature, userSigniture]
+            // })
+
+
+            console.log(await response2.json());
             setState({ ...data });
             setISMinting(false);
         } catch (error) {

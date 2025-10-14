@@ -63,6 +63,8 @@ export async function POST(request: Request) {
 
         const txBytes = await mint_nft(walletAddress);
 
+        const signedTx = await signTransaction(txBytes)
+
         // const tx = Transaction.fromKind(txBytes);
 
         // const signedTx = await tx.build({onlyTransactionKind: true})
@@ -73,11 +75,11 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
             ok: true,
-            signedTx: txBytes,
+            signedTx,
             message: `Run transaction to get Nft`,
         });
     } catch (err) {
         console.error('POST /api/stake error:', err);
-        return NextResponse.json({ ok: false, message: (err as Error).message || 'System error' }, { status: 500 });
+        return NextResponse.json({ ok: false, message: (err as Error).message || 'unknown error' }, { status: 404 });
     }
 }
