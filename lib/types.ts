@@ -1,8 +1,6 @@
 export interface MintResponse {
     ok: boolean;
-    signedTx?: {
-        signature: string;
-        bytes: string;
-    };
+    txBase64?: string;
     message: string;
+    sender?: string;
 }

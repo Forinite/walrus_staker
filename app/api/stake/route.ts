@@ -1,6 +1,5 @@
-import { getWalrusStakings, mint_nft, signTransaction } from '@/lib/smc';
-import { Transaction } from '@mysten/sui/transactions';
-import { isValidSuiAddress } from '@mysten/sui/utils';
+import { checkRank, getSender, getWalrusStakings, mint_nft, signAndExecuteTransaction, signTransaction } from '@/lib/smc';
+import { isValidSuiAddress, toBase64 } from '@mysten/sui/utils';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -9,7 +8,7 @@ export async function GET(request: Request) {
         const url = new URL(request.url);
         const searchParams = url.searchParams;
 
-        // Example: /api/stake?walletAddress=0x...
+        // routes: /api/stake?walletAddress=0x...
         const walletAddress = searchParams.get('walletAddress') ?? undefined;
 
 
@@ -61,21 +60,16 @@ export async function POST(request: Request) {
 
         const stakeDays = await getWalrusStakings(walletAddress);
 
-        const txBytes = await mint_nft(walletAddress);
+        const txBytes = await mint_nft(walletAddress, stakeDays);
 
-        const signedTx = await signTransaction(txBytes)
+        // const result = await signAndExecuteTransaction(tx);
 
-        // const tx = Transaction.fromKind(txBytes);
-
-        // const signedTx = await tx.build({onlyTransactionKind: true})
-        // tx.setSender("0x94b203ed341992a60d3089ba98280c5aa2154e84b40d1aae7ac670c8619c13d7");
-        // tx.setGasOwner("0x94b203ed341992a60d3089ba98280c5aa2154e84b40d1aae7ac670c8619c13d7");
-
-        // const signedTx = await signTransaction(tx);
+        const txBase64 = toBase64(await mint_nft(walletAddress, stakeDays));
 
         return NextResponse.json({
             ok: true,
-            signedTx,
+            txBase64,
+            sender: getSender(),
             message: `Run transaction to get Nft`,
         });
     } catch (err) {

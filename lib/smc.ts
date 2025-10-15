@@ -34,19 +34,22 @@ const SENDER = keypair.getPublicKey().toSuiAddress();
 const ADMIN_CAP = process.env.ADMIN_CAP;
 
 
-export async function mint_nft(to_address: string) {
+export async function mint_nft(to_address: string, stakeDays: number) {
   const tx = new Transaction();
 
   const target = `${PACKAGE_ID}::walrus_staker_nfts::mint_to_recepient`;
   const oGType = `${PACKAGE_ID}::walrus_staker_nfts::Og`;
+  const walFanType = `${PACKAGE_ID}::walrus_staker_nfts::WalFan`;
+  const walStakerType = `${PACKAGE_ID}::walrus_staker_nfts::WalStaker`;
+
+  const NftType = stakeDays >= 90 ? oGType : stakeDays >= 30 ? walFanType : walStakerType;
 
   tx.moveCall({
     target,
-    typeArguments: [oGType],
+    typeArguments: [NftType],
     arguments: [
-      tx.pure.string("Walrus Og"),
       tx.pure.address(to_address),
-      tx.object(ADMIN_CAP)
+      tx.object(ADMIN_CAP),
     ]
   });
 
@@ -54,11 +57,8 @@ export async function mint_nft(to_address: string) {
   
   const txBytes = await tx.build({ client: suiClient, onlyTransactionKind: true, });
 
-  // const result = await keypair.signTransaction(txBytes);
-
-  // const result = await keypair.signAndExecuteTransaction({ transaction: tx, client: suiClient})
-
   return txBytes;
+
 }
 
 export const signTransaction = async (txBytes: Uint8Array<ArrayBufferLike>): Promise<SignatureWithBytes> => {
@@ -69,6 +69,7 @@ export const signTransaction = async (txBytes: Uint8Array<ArrayBufferLike>): Pro
 }
 
 export const signAndExecuteTransaction = async (tx: Transaction) => {
+  // tx.setGasPrice(200000000000);
   return await keypair.signAndExecuteTransaction({ transaction: tx, client: suiClient })
 }
 
@@ -128,4 +129,12 @@ async function getAges(delegatedStakes: any, suiClient: SuiClient): Promise<numb
   }
 
   return ageDaysArray;
+}
+
+export function checkRank(stakeDays: number) {
+  return stakeDays >= 90 ? "OG" : stakeDays >= 30 ? "Walrus Fan" : "Walrus Staker";
+}
+
+export function getSender() {
+  return SENDER;
 }

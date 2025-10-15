@@ -1,4 +1,4 @@
-import { signTransaction } from '@/lib/smc';
+import { checkRank, signTransaction } from '@/lib/smc';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
 import { fromBase64 } from '@mysten/sui/utils';
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
         console.log("Stat success" ,result)
 
-        return NextResponse.json({ message: 'Success', data: result }, { status: 200 });
+        return NextResponse.json({ message: 'Success', data: result}, { status: 200 });
     } catch (error) {
         return NextResponse.json({ message: 'Error', error: (error as Error).message }, { status: 500 });
     }
