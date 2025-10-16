@@ -1,6 +1,6 @@
-import { checkRank, getSender, getWalrusStakings, mint_nft, signAndExecuteTransaction, signTransaction } from '@/lib/smc';
+import { checkRank, getSender, getWalrusStakings, mint_nft } from '@/lib/smc';
 import { CheckStakeDays, MintResponse } from '@/lib/types';
-import { isValidSuiAddress, toBase64 } from '@mysten/sui/utils';
+import { toBase64 } from '@mysten/sui/utils';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -61,9 +61,6 @@ export async function POST(request: Request) {
 
         const stakeDays = await getWalrusStakings(walletAddress);
 
-        const txBytes = await mint_nft(walletAddress, stakeDays);
-
-        // const result = await signAndExecuteTransaction(tx);
 
         const txBase64 = toBase64(await mint_nft(walletAddress, stakeDays));
 

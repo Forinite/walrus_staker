@@ -5,13 +5,14 @@ import {
   SuiClientProvider,
   WalletProvider,
 } from '@mysten/dapp-kit';
+import config from '@/lib/config';
 import { getFullnodeUrl } from '@mysten/sui/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const { networkConfig } = createNetworkConfig({
-  testnet: { url: getFullnodeUrl('testnet') },
-  devnet: { url: getFullnodeUrl('devnet') },
-  mainnet: { url: getFullnodeUrl('mainnet') },
+  testnet: { url: config.FULLNODE_URL || getFullnodeUrl('testnet') },
+  devnet: { url: config.FULLNODE_URL || getFullnodeUrl('devnet') },
+  mainnet: { url: config.FULLNODE_URL || getFullnodeUrl('mainnet') },
 });
 
 const queryClient = new QueryClient();
@@ -19,7 +20,7 @@ const queryClient = new QueryClient();
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <SuiClientProvider networks={networkConfig} defaultNetwork="devnet">
+      <SuiClientProvider networks={networkConfig} defaultNetwork={config.SUI_NETWORK}>
         <WalletProvider>{children}</WalletProvider>
       </SuiClientProvider>
     </QueryClientProvider>

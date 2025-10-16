@@ -1,6 +1,6 @@
 "use client";
 import { CheckStakeDays, MintResponse } from '@/lib/types';
-import { useCurrentAccount, useSignAndExecuteTransaction, useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
+import { useCurrentAccount, useSignTransaction } from '@mysten/dapp-kit';
 import { Transaction } from '@mysten/sui/transactions';
 import { fromBase64 } from '@mysten/sui/utils';
 import { useState, useCallback } from 'react';
@@ -8,8 +8,6 @@ import { useState, useCallback } from 'react';
 function useMinter() {
     const [state, setState] = useState<MintResponse | null>(null);
     const [isMinting, setISMinting] = useState(false);
-    const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-    const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
     const { mutate: signTransaction } = useSignTransaction();
 
@@ -20,7 +18,7 @@ function useMinter() {
     const [checkError, setCheckError] = useState<string | null>(null);
     const [rank, setRank] = useState<string | null>(null);
 
-    const mint = useCallback(async (params: any) => {
+    const mint = useCallback(async (params: { walletAddress: string }) => {
         // Implement minting logic here
         // setState with result or error
 
@@ -85,7 +83,7 @@ function useMinter() {
             setISMinting(false);
             setState({ ok: false, message: (error as Error).message });
         }
-    }, [currentAccount, signAndExecuteTransaction]);
+    }, [currentAccount, signTransaction]);
 
     const checkWallet = useCallback(async (walletAddress: string) => {
         setCheckError(null);

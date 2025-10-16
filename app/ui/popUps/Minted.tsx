@@ -1,5 +1,5 @@
 import React from 'react';
-import Image, { StaticImageData } from 'next/image';
+import Image from 'next/image';
 import OgStaker from '../../../public/images/OgStaker.jpg';
 import WalFan from '../../../public/images/WalFan.jpg';
 import WalStaker from '../../../public/images/WalStaker.jpg';

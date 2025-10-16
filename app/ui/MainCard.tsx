@@ -15,7 +15,6 @@ const MainCard = () => {
 
   const {
     state: mintState,
-    rank,
     mint,
     isMinting,
     checkWallet,
