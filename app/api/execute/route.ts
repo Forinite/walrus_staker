@@ -1,6 +1,5 @@
 import { checkRank, signTransaction } from '@/lib/smc';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
-import { Transaction } from '@mysten/sui/transactions';
 import { fromBase64 } from '@mysten/sui/utils';
 import { NextRequest, NextResponse } from 'next/server';
 

@@ -15,6 +15,7 @@ const MainCard = () => {
 
   const {
     state: mintState,
+    rank,
     mint,
     isMinting,
     checkWallet,
@@ -245,7 +246,7 @@ const MainCard = () => {
                 isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <Minted onClose={handleCloseMint} />
+              <Minted onClose={handleCloseMint} stakeDays={stakeDays ?? 0}/>
             </div>
           </div>
         </div>

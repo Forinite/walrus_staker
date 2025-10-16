@@ -1,4 +1,5 @@
 import { checkRank, getSender, getWalrusStakings, mint_nft, signAndExecuteTransaction, signTransaction } from '@/lib/smc';
+import { CheckStakeDays, MintResponse } from '@/lib/types';
 import { isValidSuiAddress, toBase64 } from '@mysten/sui/utils';
 import { NextResponse } from 'next/server';
 
@@ -32,13 +33,13 @@ export async function GET(request: Request) {
 
         return NextResponse.json({
             ok: true,
-            walletAddress,
             stakeDays,
+            rank: checkRank(stakeDays),
             message: `You have staked for ${stakeDays} Days`,
-        });
+        } as CheckStakeDays);
     } catch (err) {
         console.error('GET /api/stake error:', err);
-        return NextResponse.json({ ok: false, message: 'System error' }, { status: 500 });
+        return NextResponse.json({ ok: false, message: (err as Error).message || 'Unknown error' }, { status: 500 });
     }
 }
 
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
             txBase64,
             sender: getSender(),
             message: `Run transaction to get Nft`,
-        });
+        } as MintResponse);
     } catch (err) {
         console.error('POST /api/stake error:', err);
         return NextResponse.json({ ok: false, message: (err as Error).message || 'unknown error' }, { status: 404 });

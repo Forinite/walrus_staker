@@ -88,7 +88,8 @@ export async function getWalrusStakings(address: string) {
   const ageDaysArray = await getAges(delegatedStakes, suiClient);
 
   const maxAge = Math.max(...ageDaysArray);
-  return maxAge;
+  // return maxAge;
+  return 34;
 
 }
 
