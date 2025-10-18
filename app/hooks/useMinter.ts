@@ -1,6 +1,6 @@
 "use client";
-import { MintResponse } from '@/lib/types';
-import { useCurrentAccount, useSignAndExecuteTransaction, useSignTransaction, useSuiClient } from '@mysten/dapp-kit';
+import { CheckStakeDays, MintResponse } from '@/lib/types';
+import { useCurrentAccount, useSignTransaction } from '@mysten/dapp-kit';
 import { Transaction } from '@mysten/sui/transactions';
 import { fromBase64 } from '@mysten/sui/utils';
 import { useState, useCallback } from 'react';
@@ -8,8 +8,6 @@ import { useState, useCallback } from 'react';
 function useMinter() {
     const [state, setState] = useState<MintResponse | null>(null);
     const [isMinting, setISMinting] = useState(false);
-    const { mutate: signAndExecuteTransaction } = useSignAndExecuteTransaction();
-    const suiClient = useSuiClient();
     const currentAccount = useCurrentAccount();
     const { mutate: signTransaction } = useSignTransaction();
 
@@ -18,8 +16,9 @@ function useMinter() {
     const [stakeDays, setStakeDays] = useState<number | null>(null);
     const [checking, setChecking] = useState(false);
     const [checkError, setCheckError] = useState<string | null>(null);
+    const [rank, setRank] = useState<string | null>(null);
 
-    const mint = useCallback(async (params: any) => {
+    const mint = useCallback(async (params: { walletAddress: string }) => {
         // Implement minting logic here
         // setState with result or error
 
@@ -39,11 +38,12 @@ function useMinter() {
                 body: JSON.stringify({ walletAddress: params.walletAddress }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to stake');
-            }
-
+        
             const data: MintResponse = await response.json();
+
+            if (!data.ok) {
+                throw new Error(data.message ?? "Failed to stake");
+            }
 
             if (!data.txBase64) {
                 throw new Error("Transaction wasn't created")
@@ -76,15 +76,17 @@ function useMinter() {
             if (!response2.ok) {
                 throw new Error('Failed to stake');
             }
-            
+
             console.log(await response2.json());
             setState({ ...data });
             setISMinting(false);
+            setChecking(false);
         } catch (error) {
             setISMinting(false);
+            setChecking(false);
             setState({ ok: false, message: (error as Error).message });
         }
-    }, [currentAccount, signAndExecuteTransaction]);
+    }, [currentAccount, signTransaction]);
 
     const checkWallet = useCallback(async (walletAddress: string) => {
         setCheckError(null);
@@ -104,27 +106,18 @@ function useMinter() {
                 headers: { Accept: 'application/json' },
             });
 
-            const data = await res.json().catch(() => ({}));
+            const data: CheckStakeDays = await res.json().catch(() => ({}));
 
             if (!res.ok) {
-                const msg = data?.error ?? data?.message ?? 'Failed to fetch stake info.';
+                const msg = data.message ?? 'Failed to fetch stake info.';
                 setCheckError(msg);
                 setChecking(false);
                 return { ok: false, message: msg, days: null } as const;
             }
 
-            let days: number | null = null;
-            if (typeof data?.stakeDays === 'number') {
-                days = data.stakeDays;
-            } else if (typeof data?.days === 'number') {
-                days = data.days;
-            } else if (typeof data?.message === 'string') {
-                const m = data.message.match(/(\d+)\s*days?/i);
-                if (m) days = parseInt(m[1], 10);
-            }
 
-            if (days == null) {
-                if (data?.message) {
+            if (data.stakeDays == null) {
+                if (data.message) {
                     setCheckError(data.message);
                     setChecking(false);
                     return { ok: false, message: data.message, days: null } as const;
@@ -135,9 +128,10 @@ function useMinter() {
                 return { ok: false, message: msg, days: null } as const;
             }
 
-            setStakeDays(days);
+            setRank(data.rank);
+            setStakeDays(data.stakeDays);
             setChecking(true);
-            return { ok: true, message: data?.message ?? 'OK', days } as const;
+            return { ok: true, message: data?.message ?? 'OK', days: data.stakeDays } as const;
         } catch (err) {
             console.error('Error fetching stake:', err);
             const msg = 'Network error while contacting server.';
@@ -153,6 +147,7 @@ function useMinter() {
         state,
         mint,
         isMinting,
+        rank,
         // check
         checkWallet,
         checkingLoading,

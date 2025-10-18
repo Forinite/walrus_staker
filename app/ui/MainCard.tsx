@@ -48,6 +48,8 @@ const MainCard = () => {
     try {
       await mint({ walletAddress: wallet });
     } catch (err) {
+      setMintCheck(false);
+      handleCloseMint();
       setError((err as Error).message ?? 'Mint failed');
     }
   };
@@ -245,7 +247,7 @@ const MainCard = () => {
                 isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <Minted onClose={handleCloseMint} />
+              <Minted onClose={handleCloseMint} stakeDays={stakeDays ?? 0}/>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
-import { checkRank, signTransaction } from '@/lib/smc';
-import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
-import { Transaction } from '@mysten/sui/transactions';
+import { signTransaction } from '@/lib/smc';
+import { SuiClient } from '@mysten/sui/client';
+import config from '@/lib/config';
 import { fromBase64 } from '@mysten/sui/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
         const { signature } = await signTransaction(txBytes);
 
-        const suiClient = new SuiClient({ url: getFullnodeUrl("devnet")});
+    const suiClient = new SuiClient({ url: config.FULLNODE_URL });
 
         const result = await suiClient.executeTransactionBlock({
             transactionBlock: txBytes,

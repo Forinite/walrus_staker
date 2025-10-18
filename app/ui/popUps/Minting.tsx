@@ -1,5 +1,5 @@
 import React from 'react'
-import {walDesktopIcon, walGlobalIcon, walIcon} from "@/app/icons";
+import {walDesktopIcon, walGlobalIcon } from "@/app/icons";
 import Image from "next/image";
 
 const Minting = () => {
