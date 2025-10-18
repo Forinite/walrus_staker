@@ -1,10 +1,11 @@
 "use client"
-import React from 'react'
+import React, {useState} from 'react'
 import Image from "next/image";
 import {walIcon} from "@/app/icons";
 import { ConnectButton } from '@mysten/dapp-kit';
 
 const Header = () => {
+    const [isHovering, setIsHovering] = useState(false);
     return (
         <div className={' absolute w-screen h-[54px]  px-4 border-b-[1px] border-0 border-white  text-white z-50 '}>
             <div className={'w-full h-full flex items-center justify-between '}>
@@ -20,7 +21,24 @@ const Header = () => {
                 </div>
                 <div />
                 <div className={'absolute right-4'}>
-                    <ConnectButton className="font-inter font-extralight px-4 py-2 bg-[#C482F3] rounded-lg w-fit scale-90" />
+                    <ConnectButton
+                        connectText="Connect Wallet"
+                        style={{
+                            fontFamily: 'Inter, sans-serif',
+                            fontWeight: 200,
+                            padding: '8px 32px',
+                            backgroundColor: isHovering ? '#B36EE5' : '#C482F3', // slightly darker on hover
+                            borderRadius: '8px',
+                            transform: 'scale(.9)',
+                            width: 'fit-content',
+                            color: 'white',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s ease, transform 0.2s ease',
+                        }}
+                        onMouseEnter={() => setIsHovering(true)}
+                        onMouseLeave={() => setIsHovering(false)}
+                    />
+
                     {/* <ConnectButton className="font-inter font-extralight px-4 py-2 bg-[#C482F3] rounded-lg w-fit scale-90">Connect Wallect</ConnectButton> */}
                     {/* <div className="font-inter font-extralight px-4 py-2 bg-[#C482F3] rounded-lg w-fit scale-90">Connect wallet</div> */}
                 </div>
