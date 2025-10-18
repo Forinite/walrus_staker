@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
 import { getFullnodeUrl } from '@mysten/sui/client';
-
-// Load .env into process.env
-dotenv.config();
 
 // Network selection: default to testnet unless overridden
 export const SUI_NETWORK = (process.env.SUI_NETWORK || 'testnet') as 'devnet' | 'testnet' | 'mainnet';
@@ -16,11 +12,11 @@ export const RECIPIENTADRESS = process.env.RECIPIENTADRESS || '';
 export const PACKAGE_ID = process.env.PACKAGE_ID || '';
 export const ADMIN_CAP = process.env.ADMIN_CAP || '';
 
-// Validate required envs at startup when desired
+// Validate required envs when explicitly invoked (do not run at module load)
 export function validateEnv() {
     const missing: string[] = [];
     if (!PRIVATE_KEY) missing.push('PRIVATE_KEY');
-    if (!RECIPIENTADRESS) missing.push('RECIPIENTADRESS');
+    // if (!RECIPIENTADRESS) missing.push('RECIPIENTADRESS');
     if (!PACKAGE_ID) missing.push('PACKAGE_ID');
     if (!ADMIN_CAP) missing.push('ADMIN_CAP');
 
@@ -33,7 +29,7 @@ const AppConfig = {
     SUI_NETWORK,
     FULLNODE_URL,
     PRIVATE_KEY,
-    RECIPIENTADRESS,
+    // RECIPIENTADRESS,
     PACKAGE_ID,
     ADMIN_CAP,
     validateEnv,

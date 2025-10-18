@@ -72,7 +72,6 @@ export async function getWalrusStakings(address: string) {
 
   const maxAge = Math.max(...ageDaysArray);
   return maxAge;
-
 }
 
 
