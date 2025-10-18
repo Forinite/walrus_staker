@@ -8,17 +8,18 @@ export const FULLNODE_URL = process.env.FULLNODE_URL || getFullnodeUrl(SUI_NETWO
 
 // Application environment variables (explicitly exported so other modules import from here)
 export const PRIVATE_KEY = process.env.PRIVATE_KEY || '';
-export const RECIPIENTADRESS = process.env.RECIPIENTADRESS || '';
 export const PACKAGE_ID = process.env.PACKAGE_ID || '';
 export const ADMIN_CAP = process.env.ADMIN_CAP || '';
+export const WALRUS_NFT_TYPE = process.env.WALRUS_NFT_TYPE || '';
+
 
 // Validate required envs when explicitly invoked (do not run at module load)
 export function validateEnv() {
     const missing: string[] = [];
     if (!PRIVATE_KEY) missing.push('PRIVATE_KEY');
-    // if (!RECIPIENTADRESS) missing.push('RECIPIENTADRESS');
     if (!PACKAGE_ID) missing.push('PACKAGE_ID');
     if (!ADMIN_CAP) missing.push('ADMIN_CAP');
+    if (!WALRUS_NFT_TYPE) missing.push('WALRUS_NFT_TYPE');
 
     if (missing.length) {
         throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
@@ -28,8 +29,8 @@ export function validateEnv() {
 const AppConfig = {
     SUI_NETWORK,
     FULLNODE_URL,
+    WALRUS_NFT_TYPE,
     PRIVATE_KEY,
-    // RECIPIENTADRESS,
     PACKAGE_ID,
     ADMIN_CAP,
     validateEnv,

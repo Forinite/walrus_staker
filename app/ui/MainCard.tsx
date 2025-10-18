@@ -48,6 +48,8 @@ const MainCard = () => {
     try {
       await mint({ walletAddress: wallet });
     } catch (err) {
+      setMintCheck(false);
+      handleCloseMint();
       setError((err as Error).message ?? 'Mint failed');
     }
   };

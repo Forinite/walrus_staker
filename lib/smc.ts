@@ -19,15 +19,29 @@ const ADMIN_CAP = config.ADMIN_CAP;
 
 
 export async function mint_nft(to_address: string, stakeDays: number) {
-  const tx = new Transaction();
-
+  
   const target = `${PACKAGE_ID}::walrus_staker_nfts::mint_to_recepient`;
   const oGType = `${PACKAGE_ID}::walrus_staker_nfts::Og`;
   const walFanType = `${PACKAGE_ID}::walrus_staker_nfts::WalFan`;
   const walStakerType = `${PACKAGE_ID}::walrus_staker_nfts::WalStaker`;
-
+  
   const NftType = stakeDays >= 90 ? oGType : stakeDays >= 30 ? walFanType : walStakerType;
+  
+  // check if type exists
+  const nftExists = await suiClient.getOwnedObjects({
+    owner: to_address,
+    filter: { StructType: NftType },
+    options: {
+      showContent: true,
+    }
+  });
 
+  if (!(nftExists.data[0])) {
+    throw Error(`You already have NFT of type ${checkRank(stakeDays)}`);
+  }
+
+  const tx = new Transaction();
+  
   tx.moveCall({
     target,
     typeArguments: [NftType],
@@ -52,16 +66,14 @@ export const signTransaction = async (txBytes: Uint8Array | ArrayBuffer): Promis
 }
 
 export const signAndExecuteTransaction = async (tx: Transaction) => {
-  // tx.setGasPrice(200000000000);
   return await keypair.signAndExecuteTransaction({ transaction: tx, client: suiClient })
 }
 
 export async function getWalrusStakings(address: string) {
-  const suiClient = new SuiClient({ url: config.FULLNODE_URL });
   // 1. Fetch all delegated stakes for the address
   const delegatedStakes = await suiClient.getOwnedObjects({
     owner: address,
-    filter: { StructType: '0xd84704c17fc870b8764832c535aa6b11f21a95cd6f5bb38a9b07d2cf42220c66::staked_wal::StakedWal' },
+    filter: { StructType: config.WALRUS_NFT_TYPE },
     options: {
       showContent: true,
       showPreviousTransaction: true

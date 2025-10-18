@@ -38,11 +38,12 @@ function useMinter() {
                 body: JSON.stringify({ walletAddress: params.walletAddress }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to stake');
-            }
-
+        
             const data: MintResponse = await response.json();
+
+            if (!data.ok) {
+                throw new Error(data.message ?? "Failed to stake");
+            }
 
             if (!data.txBase64) {
                 throw new Error("Transaction wasn't created")
@@ -79,8 +80,10 @@ function useMinter() {
             console.log(await response2.json());
             setState({ ...data });
             setISMinting(false);
+            setChecking(false);
         } catch (error) {
             setISMinting(false);
+            setChecking(false);
             setState({ ok: false, message: (error as Error).message });
         }
     }, [currentAccount, signTransaction]);
