@@ -30,13 +30,13 @@ export async function mint_nft(to_address: string, stakeDays: number) {
   // check if type exists
   const nftExists = await suiClient.getOwnedObjects({
     owner: to_address,
-    filter: { StructType: NftType },
+    filter: { StructType: `${PACKAGE_ID}::walrus_staker_nfts::WalrusStaker<${NftType}>` },
     options: {
       showContent: true,
     }
   });
 
-  if (!(nftExists.data[0])) {
+  if (nftExists.data[0]) {
     throw Error(`You already have NFT of type ${checkRank(stakeDays)}`);
   }
 
