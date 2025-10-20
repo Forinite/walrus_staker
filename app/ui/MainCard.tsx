@@ -6,12 +6,14 @@ import { walrusIcon } from '@/app/icons';
 import Minting from '@/app/ui/popUps/Minting';
 import Minted from '@/app/ui/popUps/Minted';
 import useMinter from '../hooks/useMinter';
+import { useCurrentAccount } from '@mysten/dapp-kit';
 
 const MainCard = () => {
   // whether we've successfully checked (shows claim) is now provided by the hook
   const [isMinted, setIsMinted] = React.useState(false); // local flag for showing minted UI
   const [MintCheck, setMintCheck] = React.useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
+  const currentAccount = useCurrentAccount();
 
   const {
     state: mintState,
@@ -113,6 +115,11 @@ const MainCard = () => {
       }
     };
   }, []);
+
+  // auto fill wallet
+  useEffect(() => {
+    if (currentAccount?.address) setWallet(currentAccount.address)
+  }, [currentAccount?.address])
 
   // Perform the GET /api/stake?walletAddress=... call
   const onCheckWallet = async () => {
