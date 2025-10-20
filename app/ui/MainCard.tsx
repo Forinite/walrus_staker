@@ -83,7 +83,10 @@ const MainCard = () => {
   useEffect(() => {
     if (!MintCheck) return;
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         handleCloseMint();
       }
     };
@@ -220,7 +223,9 @@ const MainCard = () => {
                 </div>
 
                 <p className="text-center inter md:hidden block">
-                  Stake Walrus
+                  <a href="https://stake-wal.wal.app" target="_blank">
+                    Stake Walrus
+                  </a>
                 </p>
               </div>
             </div>
@@ -247,7 +252,7 @@ const MainCard = () => {
                 isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <Minted onClose={handleCloseMint} stakeDays={stakeDays ?? 0}/>
+              <Minted onClose={handleCloseMint} stakeDays={stakeDays ?? 0} />
             </div>
           </div>
         </div>
