@@ -21,7 +21,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork={config.SUI_NETWORK}>
-        <WalletProvider>{children}</WalletProvider>
+        <WalletProvider slushWallet={{
+          name: 'Walrus Staker'
+        }}>{children}</WalletProvider>
       </SuiClientProvider>
     </QueryClientProvider>
   );
