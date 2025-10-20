@@ -6,12 +6,14 @@ import { walrusIcon } from '@/app/icons';
 import Minting from '@/app/ui/popUps/Minting';
 import Minted from '@/app/ui/popUps/Minted';
 import useMinter from '../hooks/useMinter';
+import { useCurrentAccount } from '@mysten/dapp-kit';
 
 const MainCard = () => {
   // whether we've successfully checked (shows claim) is now provided by the hook
   const [isMinted, setIsMinted] = React.useState(false); // local flag for showing minted UI
   const [MintCheck, setMintCheck] = React.useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
+  const currentAccount = useCurrentAccount();
 
   const {
     state: mintState,
@@ -48,6 +50,8 @@ const MainCard = () => {
     try {
       await mint({ walletAddress: wallet });
     } catch (err) {
+      setMintCheck(false);
+      handleCloseMint();
       setError((err as Error).message ?? 'Mint failed');
     }
   };
@@ -81,7 +85,10 @@ const MainCard = () => {
   useEffect(() => {
     if (!MintCheck) return;
     const handleClickOutside = (event: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node)
+      ) {
         handleCloseMint();
       }
     };
@@ -108,6 +115,11 @@ const MainCard = () => {
       }
     };
   }, []);
+
+  // auto fill wallet
+  useEffect(() => {
+    if (currentAccount?.address) setWallet(currentAccount.address)
+  }, [currentAccount?.address])
 
   // Perform the GET /api/stake?walletAddress=... call
   const onCheckWallet = async () => {
@@ -218,7 +230,9 @@ const MainCard = () => {
                 </div>
 
                 <p className="text-center inter md:hidden block">
-                  Stake Walrus
+                  <a href="https://stake-wal.wal.app" target="_blank">
+                    Stake Walrus
+                  </a>
                 </p>
               </div>
             </div>
@@ -245,7 +259,7 @@ const MainCard = () => {
                 isMinted ? 'opacity-100' : 'opacity-0 pointer-events-none'
               }`}
             >
-              <Minted onClose={handleCloseMint} />
+              <Minted onClose={handleCloseMint} stakeDays={stakeDays ?? 0} />
             </div>
           </div>
         </div>

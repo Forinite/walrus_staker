@@ -4,3 +4,10 @@ export interface MintResponse {
     message: string;
     sender?: string;
 }
+
+export interface CheckStakeDays {
+    ok: boolean;
+    rank: string;
+    stakeDays: number;
+    message: string;
+}

@@ -1,15 +1,16 @@
 import React from 'react';
 import Image from 'next/image';
 import OgStaker from '../../../public/images/OgStaker.jpg';
+import WalFan from '../../../public/images/WalFan.jpg';
+import WalStaker from '../../../public/images/WalStaker.jpg';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 interface MintedProps {
   onClose: () => void;
-  // srcImg: string;
-  // url: string;
+  stakeDays: number;
 }
 
-const Minted: React.FC<MintedProps> = ({ onClose }) => {
+const Minted: React.FC<MintedProps> = ({ onClose, stakeDays }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useTransform(y, [-50, 50], [10, -10]);
@@ -20,6 +21,12 @@ const Minted: React.FC<MintedProps> = ({ onClose }) => {
     x.set(e.clientX - rect.left - rect.width / 2);
     y.set(e.clientY - rect.top - rect.height / 2);
   };
+
+  const NftType = stakeDays >= 90
+      ? { image: OgStaker, rank: 'OG' }
+      : stakeDays >= 30
+      ? { image: WalFan, rank: 'Walrus Fan' }
+      : { image: WalStaker, rank: 'Walrus Staker' };
 
   const reset = () => {
     x.set(0);
@@ -36,8 +43,8 @@ const Minted: React.FC<MintedProps> = ({ onClose }) => {
       <div className="flex justify-center w-full items-center gap-12 md:mt-6 mt-3">
         <div className="w-[50%] md:w-[305px] aspect-[325/328] border border-[#98F0E4] overflow-hidden rounded-[4px] relative">
           <Image
-            src={OgStaker}
-            alt="walGrid"
+            src={NftType.image}
+            alt={NftType.rank}
             width={325}
             height={328}
             className=" mx-auto aspect-square"
