@@ -1,7 +1,7 @@
 import { getFullnodeUrl } from '@mysten/sui/client';
 
 // Network selection: default to testnet unless overridden
-export const SUI_NETWORK = (process.env.SUI_NETWORK || 'testnet') as 'devnet' | 'testnet' | 'mainnet';
+export const SUI_NETWORK = (process.env.SUI_NETWORK || 'mainnet') as 'devnet' | 'testnet' | 'mainnet';
 
 // Allow overriding the fullnode url directly via env, otherwise derive from SUI_NETWORK
 export const FULLNODE_URL = process.env.FULLNODE_URL || getFullnodeUrl(SUI_NETWORK);
